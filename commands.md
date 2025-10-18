@@ -1,0 +1,5 @@
+"## Common Git Commands"
+"-git init: initialize repo"
+"-git add: stage changes"
+"-git commit: save changes"
+"-git push: upload to remote"
