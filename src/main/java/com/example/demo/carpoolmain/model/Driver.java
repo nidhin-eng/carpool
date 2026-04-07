@@ -1,12 +1,40 @@
 package com.example.demo.carpoolmain.model;
 
-public class Driver extends User {
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
-  public Driver(int id, String name) {
-    super(id, name);
+@Entity
+public class Driver {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  private String name;
+  private String vehicle;
+
+  public Long getId() {
+    return id;
   }
 
-  public Ride createRide(int rideId, String src, String dest, int seats) {
-    return new Ride(rideId, src, dest, seats);
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getVehicle() {
+    return vehicle;
+  }
+
+  public void setVehicle(String vehicle) {
+    this.vehicle = vehicle;
   }
 }
