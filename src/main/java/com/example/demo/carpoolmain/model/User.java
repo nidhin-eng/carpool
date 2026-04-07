@@ -1,20 +1,18 @@
 package com.example.demo.carpoolmain.model;
 
-public abstract class User {
+import jakarta.persistence.*;
 
-  private int id;
-  private String name;
+@Entity
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  public User(int id, String name) {
-    this.id = id;
-    this.name = name;
-  }
+    private String name;
 
-  public int getId() {
-    return id;
-  }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-  public String getName() {
-    return name;
-  }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 }
