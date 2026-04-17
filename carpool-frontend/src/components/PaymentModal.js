@@ -10,7 +10,7 @@ export default function PaymentModal({ booking, onSuccess, onClose }) {
   const [error, setError] = useState('');
   const [upiId, setUpiId] = useState('');
 
-  const amount = booking.seats * 50;
+  const amount = booking.pricePerSeat ? booking.seats * booking.pricePerSeat : booking.seats * 50;
 
   const processPayment = async (selectedMethod) => {
     setLoading(true);

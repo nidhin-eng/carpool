@@ -6,18 +6,18 @@ public class Ride {
   private String source;
   private String destination;
   private int availableSeats;
-  @SuppressWarnings("unused")
+  private double pricePerSeat;
   private RideStatus status;
 
-  public Ride(int id, String source, String destination, int seats) {
+  public Ride(int id, String source, String destination, int seats, double pricePerSeat) {
     this.rideId = id;
     this.source = source;
     this.destination = destination;
     this.availableSeats = seats;
+    this.pricePerSeat = pricePerSeat;
     this.status = RideStatus.SCHEDULED;
   }
 
-  // Information Expert: Ride manages seats
   public boolean hasSeats(int seats) {
     return availableSeats >= seats;
   }
@@ -33,19 +33,9 @@ public class Ride {
     availableSeats += seats;
   }
 
-  public int getRideId() {
-    return rideId;
-  }
-
-  public int getAvailableSeats() {
-    return availableSeats;
-  }
-
-  public String getSource() {
-    return source;
-  }
-
-  public String getDestination() {
-    return destination;
-  }
+  public int getRideId() { return rideId; }
+  public int getAvailableSeats() { return availableSeats; }
+  public String getSource() { return source; }
+  public String getDestination() { return destination; }
+  public double getPricePerSeat() { return pricePerSeat; }
 }

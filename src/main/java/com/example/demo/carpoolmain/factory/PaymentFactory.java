@@ -1,6 +1,6 @@
 package com.example.demo.carpoolmain.factory;
 
-import com.example.demo.carpoolmain.repository.Payment;
+import com.example.demo.carpoolmain.model.Payment;
 
 public class PaymentFactory {
 
@@ -8,6 +8,7 @@ public class PaymentFactory {
         Payment payment = new Payment();
         payment.setAmount(amount);
         payment.setMethod(method);
+        payment.setStatus("PENDING");
         return payment;
     }
 }

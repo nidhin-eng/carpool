@@ -22,6 +22,6 @@ public class Driver extends User {
   }
 
   public Ride createRide(int rideId, String source, String destination, int seats) {
-    return new Ride(rideId, source, destination, seats);
+    return new Ride(rideId, source, destination, seats,0.0);
   }
 }

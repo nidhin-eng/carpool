@@ -44,7 +44,7 @@ export default function PassengerPanel({ onLogout, onLogin }) {
       });
       const data = await response.json();
       if (response.ok && data.success) {
-        const booking = { ...data.data, seats: parseInt(seatsToBook), paymentStatus: 'UNPAID' };
+        const booking = { ...data.data, seats: parseInt(seatsToBook), paymentStatus: "UNPAID", pricePerSeat: rides.find(r => r.rideId === rideId)?.pricePerSeat || 50 };
         setBookings(prev => [...prev, booking]);
         setMessage(`✅ Booking confirmed! Booking ID: ${booking.id}`);
         setRides(rides.map(ride =>
@@ -125,6 +125,7 @@ export default function PassengerPanel({ onLogout, onLogin }) {
                   <div className="info-item"><strong>To</strong><span>{ride.destination}</span></div>
                   <div className="info-item"><strong>Available Seats</strong><span>{ride.availableSeats}</span></div>
                   <div className="info-item"><strong>Driver</strong><span>{ride.driverName || 'Unknown'}</span></div>
+                  <div className="info-item"><strong>Price per Seat</strong><span>₹{ride.pricePerSeat || 50}</span></div>
                 </div>
                 <button
                   className="btn btn-passenger"
@@ -148,7 +149,7 @@ export default function PassengerPanel({ onLogout, onLogin }) {
                 <h4>Booking #{booking.id}</h4>
                 <p>🚗 Ride ID: {booking.rideId}</p>
                 <p>🪑 Seats: {booking.seats}</p>
-                <p>💰 Amount: ₹{booking.seats * 50}</p>
+                <p>💰 Amount: ₹{booking.pricePerSeat ? booking.seats * booking.pricePerSeat : booking.seats * 50}</p>
                 <p>
                   💳 Payment:{' '}
                   <span style={{ color: booking.paymentStatus === 'PAID' ? 'green' : '#e67e00', fontWeight: 'bold' }}>
@@ -161,7 +162,7 @@ export default function PassengerPanel({ onLogout, onLogin }) {
                     style={{ marginTop: '8px' }}
                     onClick={() => setPayingBooking(booking)}
                   >
-                    💳 Pay Now (₹{booking.seats * 50})
+                    💳 Pay Now (₹{booking.pricePerSeat ? booking.seats * booking.pricePerSeat : booking.seats * 50})
                   </button>
                 )}
               </div>
