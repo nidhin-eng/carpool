@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
 import com.example.demo.carpoolmain.model.Ride;
+import com.example.demo.carpoolmain.state.RideContext;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -14,6 +15,7 @@ import com.example.demo.carpoolmain.model.Ride;
 public class RideController {
 
   private static List<Ride> ridesList = new ArrayList<>();
+  private static Map<Integer, RideContext> rideStateMap = new HashMap<>();
   private static int rideIdCounter = 1;
 
   @GetMapping
@@ -27,6 +29,9 @@ public class RideController {
       rideMap.put("destination", ride.getDestination());
       rideMap.put("availableSeats", ride.getAvailableSeats());
       rideMap.put("pricePerSeat", ride.getPricePerSeat());
+      // State Pattern - get current ride state
+      RideContext ctx = rideStateMap.get(ride.getRideId());
+      rideMap.put("status", ctx != null ? ctx.getCurrentStateName() : "SCHEDULED");
       ridesData.add(rideMap);
     }
     response.put("success", true);
@@ -46,6 +51,10 @@ public class RideController {
       Ride ride = new Ride(rideIdCounter++, source, destination, seats, pricePerSeat);
       ridesList.add(ride);
 
+      // State Pattern - create a new RideContext starting at SCHEDULED
+      RideContext context = new RideContext();
+      rideStateMap.put(ride.getRideId(), context);
+
       Map<String, Object> response = new HashMap<>();
       response.put("success", true);
       response.put("message", "Ride created successfully");
@@ -56,6 +65,7 @@ public class RideController {
       rideMap.put("destination", ride.getDestination());
       rideMap.put("availableSeats", ride.getAvailableSeats());
       rideMap.put("pricePerSeat", ride.getPricePerSeat());
+      rideMap.put("status", context.getCurrentStateName());
       response.put("data", rideMap);
 
       return ResponseEntity.ok(response);
@@ -65,5 +75,35 @@ public class RideController {
       response.put("message", "Error creating ride: " + e.getMessage());
       return ResponseEntity.status(400).body(response);
     }
+  }
+
+  @PutMapping("/{rideId}/next")
+  public ResponseEntity<Map<String, Object>> nextState(@PathVariable int rideId) {
+    Map<String, Object> response = new HashMap<>();
+    RideContext ctx = rideStateMap.get(rideId);
+    if (ctx == null) {
+      response.put("success", false);
+      response.put("message", "Ride not found");
+      return ResponseEntity.status(404).body(response);
+    }
+    ctx.next();
+    response.put("success", true);
+    response.put("status", ctx.getCurrentStateName());
+    return ResponseEntity.ok(response);
+  }
+
+  @PutMapping("/{rideId}/cancel")
+  public ResponseEntity<Map<String, Object>> cancelRide(@PathVariable int rideId) {
+    Map<String, Object> response = new HashMap<>();
+    RideContext ctx = rideStateMap.get(rideId);
+    if (ctx == null) {
+      response.put("success", false);
+      response.put("message", "Ride not found");
+      return ResponseEntity.status(404).body(response);
+    }
+    ctx.cancel();
+    response.put("success", true);
+    response.put("status", ctx.getCurrentStateName());
+    return ResponseEntity.ok(response);
   }
 }
